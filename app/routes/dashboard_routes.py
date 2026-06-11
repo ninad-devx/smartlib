@@ -1,28 +1,20 @@
-from fastapi import FastAPI
-from starlette.middleware.sessions import SessionMiddleware
-from fastapi import Request
+from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
-from app.api.auth import router as auth_router
-from app.utils.auth import require_login,require_role
-from app.api.books import router as book_router
-from app.api.borrow import (router as borrow_router)
+
+from app.utils.auth import require_login, require_role
 from app.core.database import Sessionlocal
 from app.services.dashboard_service import get_librarian_stats
-from app.api.rfid import( router as rfid_router)
-from app.api.hardware import (
-    router as hardware_router
-)
+
 from app.models.user import User
 from app.models.attendance import Attendancelog
-from datetime import datetime
 from app.models.borrow import Borrowrecord
 from app.models.book import Book
 from app.models.renewal import RenewalRequest
-from sqlalchemy import func
-from fastapi import APIRouter
+
+from datetime import datetime
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="app/templates")
 
 
 
