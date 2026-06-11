@@ -9,7 +9,7 @@ class Book(Base):
 
     id=Column(Integer, primary_key=True)
 
-    isbn=Column(String(30),unique=True)
+    isbn=Column(String(50),unique=True)
 
     title=Column(String(255),nullable=False)
 

@@ -3,8 +3,8 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 import app.services.rfid_state as rfid_state
-from app.services.audit_service import log_action
 from app.models.user import User
+from app.services.audit_service import log_action
 
 from app.services.rfid_service import link_rfid
 

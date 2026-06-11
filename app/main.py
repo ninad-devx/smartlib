@@ -6,6 +6,9 @@ from app.api.books import router as book_router
 from app.api.borrow import router as borrow_router
 from app.api.rfid import router as rfid_router
 from app.api.hardware import router as hardware_router
+from app.routes.audit_routes import (
+    router as audit_router
+)
 
 from app.routes.dashboard_routes import router as dashboard_router
 from app.routes.page_routes import router as page_router
@@ -30,3 +33,5 @@ app.include_router(hardware_router, prefix="/api/v1/hardware", tags=["Hardware"]
 
 app.include_router(dashboard_router)
 app.include_router(page_router)
+app.include_router(audit_router)
+

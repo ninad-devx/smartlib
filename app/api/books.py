@@ -1,11 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter,Request
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models.shelf import Shelf
 from app.models.book import Book
 from sqlalchemy import or_
-
+from app.services.audit_service import log_action
 from app.schemas.book import(ShelfCreate,Bookcreate)
 
 router=APIRouter()
@@ -32,7 +32,7 @@ def get_shelves(db:Session=Depends(get_db)):
 
 
 @router.post("/books")
-def created_book(payload:Bookcreate,db:Session=Depends(get_db)):
+def created_book(request:Request,payload:Bookcreate,db:Session=Depends(get_db)):
 
     print(payload)
 
@@ -49,6 +49,16 @@ def created_book(payload:Bookcreate,db:Session=Depends(get_db)):
 
     db.add(book)
     db.commit()
+    db.refresh(book)
+    user_id = request.session.get("user_id")
+
+    if user_id:
+     log_action(
+        db,
+        f"Book added: {book.title}",
+        user_id
+    )
+
     return {
         "succes":True,
         "message":"book added"

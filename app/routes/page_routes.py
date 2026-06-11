@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
+from sqlalchemy import or_
 
 from app.utils.auth import require_login, require_role
 from app.core.database import Sessionlocal
@@ -9,6 +10,7 @@ from app.models.attendance import Attendancelog
 from app.models.borrow import Borrowrecord
 from app.models.book import Book
 from app.models.renewal import RenewalRequest
+
 
 from sqlalchemy import func
 
@@ -89,6 +91,7 @@ def profile_page(
             "user_id": request.session.get("user_id"),
             "name": request.session.get("name"),
             "role": request.session.get("role"),
+            "email":user.email,
             "rfid_uid":user.rfid_uid,
             "borrow_count": borrow_count,
             "visit_count": visit_count,
@@ -251,3 +254,54 @@ def renewals_page(
     )
 
 
+@router.get("/student_search")
+def student_page(
+    request: Request,
+    q: str = ""
+):
+    require_login(request)
+
+    db = Sessionlocal()
+
+    students = []
+    borrows = []
+    attendance = []
+
+    if q:
+        students = (
+    db.query(User)
+    .filter(
+        or_(
+            User.name.ilike(f"%{q}%"),
+            User.university_id == int(q) if q.isdigit() else False
+        )
+    )
+    .all()
+)
+
+        if len(students) == 1:
+            student = students[0]
+
+            borrows = (
+                db.query(Borrowrecord)
+                .filter(Borrowrecord.user_id == student.id)
+                .all()
+            )
+
+            attendance = (
+                db.query(Attendancelog)
+                .filter(Attendancelog.user_id == student.id)
+                .all()
+            )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="student_details.html",
+        context={
+            "request": request,
+            "students": students,
+            "q": q,
+            "borrows": borrows,
+            "attendance": attendance
+        }
+    )

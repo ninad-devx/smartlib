@@ -9,6 +9,8 @@ from app.schemas.auth import LoginSchema
 from app.utils.security import verify_password
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from fastapi import Request
+from fastapi.responses import RedirectResponse
 
 router=APIRouter()
 
@@ -77,14 +79,10 @@ def login(payload:LoginSchema,request:Request,db:Session=Depends(get_db)):
 
 
 #logout
-@router.post("/logout")
-def logout(request:Request):
+@router.get("/logout")
+def logout(request: Request):
     request.session.clear()
-
-    return {
-        "success":True,
-        "message":"logged out"
-    }
+    return RedirectResponse(url="/login", status_code=303)
 
 #current user
 @router.get("/me")

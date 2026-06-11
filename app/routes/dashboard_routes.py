@@ -22,77 +22,123 @@ templates = Jinja2Templates(directory="app/templates")
 
 @router.get("/student")
 def student_dashboard(request: Request):
-    print(request.session)
-    db=Sessionlocal()
+    db = Sessionlocal()
 
     require_login(request)
     require_role(request, ["student"])
 
-    borrowed_books = (
-    db.query(
-        Borrowrecord,
-        Book
-    )
-    .join(
-        Book,
-        Borrowrecord.book_id == Book.id
-    )
-    .filter(
-        Borrowrecord.user_id ==
-        request.session["user_id"]
-    )
-    .order_by(
-        Borrowrecord.id.desc()
-    )
-    .all()
-)
-    attendance_history = (
-    db.query(Attendancelog)
-    .filter(
-        Attendancelog.user_id ==
-        request.session["user_id"]
-    )
-    .order_by(
-        Attendancelog.id.desc()
-    )
-    .limit(20)
-    .all()
-)
-    renewals = (
-    db.query(
-        RenewalRequest
-    )
-    .join(
-        Borrowrecord,
-        RenewalRequest.borrow_id ==
-        Borrowrecord.id
-    )
-    .filter(
-        Borrowrecord.user_id ==
-        request.session["user_id"]
-    )
-    .all()
-)
-    renewal_map = {
-    r.borrow_id: r.status
-    for r in renewals
-}
-    
-    
+    user_id = request.session["user_id"]
+    now = datetime.utcnow()
 
+    # ---------------------------
+    # Borrowed books
+    # ---------------------------
+    borrowed_books = (
+        db.query(Borrowrecord, Book)
+        .join(Book, Borrowrecord.book_id == Book.id)
+        .filter(Borrowrecord.user_id == user_id)
+        .order_by(Borrowrecord.id.desc())
+        .all()
+    )
+
+    # ---------------------------
+    # Attendance history
+    # ---------------------------
+    attendance_history = (
+        db.query(Attendancelog)
+        .filter(Attendancelog.user_id == user_id)
+        .order_by(Attendancelog.id.desc())
+        .limit(20)
+        .all()
+    )
+
+    # ---------------------------
+    # Renewals
+    # ---------------------------
+    renewals = (
+        db.query(RenewalRequest)
+        .join(Borrowrecord, RenewalRequest.borrow_id == Borrowrecord.id)
+        .filter(Borrowrecord.user_id == user_id)
+        .all()
+    )
+
+    renewal_map = {
+        r.borrow_id: r.status
+        for r in renewals
+    }
+
+    # ---------------------------
+    # Renewal allowed check (FIXED)
+    # ---------------------------
+    renewal_allowed = {}
+
+    for b, book in borrowed_books:
+      if b.status != "borrowed":
+        renewal_allowed[b.id] = False
+        continue
+
+      if not b.due_date:
+        renewal_allowed[b.id] = False
+        continue
+
+    try:
+        renewal_allowed[b.id] = b.due_date > now
+    except:
+        renewal_allowed[b.id] = False
+
+    # ---------------------------
+    # Borrowed count
+    # ---------------------------
+    borrowed_count = sum(
+        1 for b, book in borrowed_books
+        if b.status == "borrowed"
+    )
+
+    # ---------------------------
+    # Hours in library
+    # ---------------------------
+    hours_in_library = 0
+
+    for log in attendance_history:
+        if log.entry_time and log.exit_time:
+            diff = log.exit_time - log.entry_time
+            hours_in_library += diff.total_seconds() / 3600
+
+    hours_in_library = round(hours_in_library, 2)
+
+    # ---------------------------
+    # Fine calculation
+    # ---------------------------
+    pending_fines = 0
+
+    for b, book in borrowed_books:
+        if b.status == "borrowed" and b.due_date:
+            if b.due_date < now:
+                days_late = (now - b.due_date).days
+                pending_fines += days_late * 5
+
+    # ---------------------------
+    # Render
+    # ---------------------------
     return templates.TemplateResponse(
         request=request,
         name="student.html",
         context={
             "request": request,
             "name": request.session.get("name"),
+
             "borrowed_books": borrowed_books,
             "attendance_history": attendance_history,
             "renewals": renewals,
-            "renewal_map": renewal_map
+            "renewal_map": renewal_map,
+
+            "borrowed_count": borrowed_count,
+            "hours_in_library": hours_in_library,
+            "pending_fines": pending_fines,
+
+            "renewal_allowed": renewal_allowed
         }
     )
-
 
 @router.get("/teacher")
 def teacher_dashboard(request: Request):

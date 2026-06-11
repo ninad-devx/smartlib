@@ -7,12 +7,6 @@ from app.core.database import get_db
 from app.models.user import User
 from app.models.book import Book
 from app.models.borrow import Borrowrecord
-from app.services.borrow_service import (
-    borrow_book_service
-)
-
-from datetime import datetime, timedelta
-
 from app.schemas.borrow import(Borrowcreate,Returnbook)
 from app.models.renewal import RenewalRequest
 from app.schemas.renewal import RenewalRequestCreate
@@ -83,15 +77,16 @@ def borrow_book(
     )
 
     book.available_quantity -= 1
+    
+
+    db.add(record)
+    db.commit()
+    db.refresh(record)
     log_action(
     db,
     f"{user.name} borrowed {book.title}",
     user.id
 )
-
-    db.add(record)
-    db.commit()
-    db.refresh(record)
 
     return {
     "success": True,
@@ -131,12 +126,19 @@ def return_book(payload:Returnbook,db:Session=Depends(get_db)):
     book.available_quantity+=1
     borrow.return_date=datetime.utcnow()
     borrow.status="returned"
-    log_action(
-    db,
-    f"{borrow.user_id} returned book {borrow.book_id}",
+    
+    db.commit()
+    user = db.get(
+    User,
     borrow.user_id
 )
-    db.commit()
+
+    log_action(
+     db,
+     f"{user.name} returned book",
+     user.id
+)
+    
 
     return {
         "success":True,
@@ -268,19 +270,3 @@ def approve_renewal(
 
     }
 
-@router.post("/renew-approve")
-def approve_renewal(payload: RenewalApprove, db: Session = Depends(get_db)):
-
-    renewal = db.query(RenewalRequest).get(payload.renewal_id)
-
-    if not renewal:
-        return {"success": False, "message": "not found"}
-
-    borrow = db.query(Borrowrecord).get(renewal.borrow_id)
-
-    borrow.due_date = borrow.due_date + timedelta(days=renewal.requested_days)
-    renewal.status = "approved"
-
-    db.commit()
-
-    return {"success": True, "message": "approved"}

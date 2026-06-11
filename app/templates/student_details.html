@@ -1,0 +1,65 @@
+{% include "navbar.html" %}
+
+<h2>Student Search</h2>
+
+<form method="get">
+    <input
+        type="text"
+        name="q"
+        value="{{ q }}"
+        placeholder="Search name"
+    >
+    <button type="submit">
+        Search
+    </button>
+</form>
+
+{% if students %}
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Role</th>
+        <th>user id</th>
+        <th>RFID UID</th>
+    </tr>
+
+    {% for student in students %}
+    <tr>
+        <td>{{ student.name }}</td>
+        <td>{{ student.role }}</td>
+        <td>{{student.id}}</td>
+        <td>{{student.rfid_uid}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endif %}
+
+<h2>Borrow History</h2>
+
+<ul>
+{% for borrow in borrows %}
+    <li>
+        Book ID: {{ borrow.book_id }}
+        |
+        Status: {{ borrow.status }}
+    </li>
+{% endfor %}
+</ul>
+
+<h2>Attendance History</h2>
+
+<ul>
+{% for record in attendance %}
+    <li>
+        {{ record.entry_time }}
+        -
+        {{ record.exit_time }}
+    </li>
+{% endfor %}
+</ul>
+
+<footer class="text-center mt-5 mb-3">
+SmartLib Ecosystem - RFID Smart Library System
+</footer>
