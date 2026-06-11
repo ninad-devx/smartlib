@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Welcome {{name}}</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+<div class="container">
+
+<a class="navbar-brand" href="#">
+SmartLib
+</a>
+
+<div>
+
+<a
+class="btn btn-light me-2"
+href="/librarian"
+>
+Dashboard
+</a>
+
+<a
+class="btn btn-warning me-2"
+href="/profile"
+>
+Profile
+</a>
+<a
+class="btn btn-info me-2"
+href="/books-page"
+>
+Books
+</a>
+
+<a
+class="btn btn-success me-2"
+href="/circulation"
+>
+Circulation
+</a>
+<a
+class="btn btn-secondary me-2"
+href="/attendance-page"
+>
+Attendance
+</a>
+<a
+class="btn btn-warning me-2"
+href="/renewals"
+>
+Renewals
+</a>
+
+<a
+class="btn btn-danger"
+href="/api/auth/logout"
+>
+Logout
+</a>
+
+</div>
+
+</div>
+<div class="col-md-3">
+
+    <div class="card p-3">
+
+        <h5>
+            Overdue Books
+        </h5>
+
+        <h3>
+            {{ stats.overdue_books }}
+        </h3>
+
+    </div>
+
+</div>
+
+</nav>
+
+<body>
+    <div class="col-md-3">
+    <div class="card p-3">
+        <h5>Current Visitors</h5>
+        <h3>{{ stats.current_visitors }}</h3>
+    </div>
+</div>
+
+<div class="container mt-4">
+
+<h2>
+Librarian Dashboard
+</h2>
+
+<div class="row">
+
+<div class="col-md-3">
+<div class="card p-3">
+<h5>Visitors</h5>
+<h3>{{stats.current_visitors}}</h3>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card p-3">
+<h5>Total Books</h5>
+<h3>{{stats.total_books}}</h3>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card p-3">
+<h5>Active Loans</h5>
+<h3>{{stats.active_loans}}</h3>
+</div>
+</div>
+#quick action setup
+<div class="col-md-3">
+<div class="card p-3">
+<h5>Total users</h5>
+<h3>{{stats.total_users}}</h3>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<hr>
+
+<h4>Quick Actions</h4>
+
+<div class="mt-3">
+
+<a href="/books-page" class="btn btn-primary">
+Manage Books
+</a>
+
+<a href="/borrow-page" class="btn btn-success">
+Borrow Book
+</a>
+
+<a href="/attendance-page" class="btn btn-warning">
+Attendance
+</a>
+
+</div>
+
+<div class="col-md-3">
+    <div class="card p-3">
+        <h5>Today's Visits</h5>
+        <h3>{{ stats.today_attendance }}</h3>
+    </div>
+</div>
+
+<hr>
+
+<h4>Recent RFID Activity</h4>
+
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Entry Time</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for attendance, user in stats.recent_activity %}
+
+        <tr>
+
+            <td>{{ user.name }}</td>
+
+            <td>{{ attendance.entry_time }}</td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+<hr>
+
+<h3>Currently Inside Library</h3>
+
+<table class="table table-striped">
+
+<thead>
+<tr>
+    <th>Name</th>
+    <th>Role</th>
+    <th>Entry Time</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for attendance, user in current_inside %}
+
+<tr>
+
+<td>{{ user.name }}</td>
+
+<td>{{ user.role }}</td>
+
+<td>{{ attendance.entry_time }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+<hr>
+
+<h3>Overdue Books</h3>
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+
+<th>Student</th>
+<th>Book</th>
+<th>Due Date</th>
+<th>Days Late</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for borrow, user, book in overdue_records %}
+
+<tr>
+
+<td>{{ user.name }}</td>
+
+<td>{{ book.title }}</td>
+
+<td>{{ borrow.due_date }}</td>
+
+<td>
+
+{{ (
+(
+now -
+borrow.due_date
+).days
+) }}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</body>
+</html>
