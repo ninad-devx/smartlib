@@ -135,14 +135,14 @@ def return_book(payload:Returnbook,db:Session=Depends(get_db)):
 
     log_action(
      db,
-     f"{user.name} returned book",
+     f"{user.name} returned book {book.title}",
      user.id
 )
     
 
     return {
         "success":True,
-        "message":"book returned"
+        "message":f" {user.name}returned the book {book.title}"
     }
 
 @router.get("/borrow/history/{user_id}")

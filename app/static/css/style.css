@@ -1,0 +1,543 @@
+/* ==================================================
+   SmartLib Ultimate Modern UI Theme
+   Global Library Management System Styling
+   ================================================== */
+
+
+:root {
+    --primary: #2563eb;
+    --secondary: #7c3aed;
+    --dark: #111827;
+    --light: #f8fafc;
+    --card: rgba(255,255,255,0.85);
+    --border: rgba(255,255,255,0.3);
+    --shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    background:
+    radial-gradient(circle at top left,#dbeafe,transparent 35%),
+    radial-gradient(circle at bottom right,#ede9fe,transparent 35%),
+    #f8fafc;
+
+    font-family:
+    "Inter",
+    "Segoe UI",
+    system-ui,
+    sans-serif;
+
+    color: #1f2937;
+
+}
+
+
+
+
+
+
+/* NAVBAR */
+
+.navbar {
+
+    background:
+    linear-gradient(
+        135deg,
+        #111827,
+        #1e40af
+    ) !important;
+
+
+    padding: 15px 25px;
+
+    backdrop-filter: blur(15px);
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.25);
+
+}
+
+
+
+.navbar-brand {
+
+    font-size: 1.7rem;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+}
+
+
+
+.navbar a {
+
+    transition: .25s ease;
+
+}
+
+
+
+.navbar .btn:hover {
+
+    transform: translateY(-3px);
+
+}
+
+
+
+
+
+/* PAGE CONTAINER */
+
+
+.container {
+
+    animation: fadeIn .5s ease;
+
+}
+
+
+
+@keyframes fadeIn {
+
+from {
+
+opacity:0;
+
+transform:translateY(15px);
+
+}
+
+
+to {
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+
+
+
+
+
+/* HEADINGS */
+
+
+h1,h2,h3,h4,h5 {
+
+    color:#111827;
+
+    font-weight:800;
+
+}
+
+
+
+
+
+
+/* CARDS */
+
+
+.card {
+
+    border:none !important;
+
+    border-radius:22px !important;
+
+    background:
+    rgba(255,255,255,.85) !important;
+
+
+    backdrop-filter:
+    blur(18px);
+
+
+    box-shadow:
+    var(--shadow);
+
+
+    transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+
+
+    overflow:hidden;
+
+}
+
+
+
+
+.card:hover {
+
+    transform:
+    translateY(-6px);
+
+
+    box-shadow:
+    0 25px 50px rgba(0,0,0,.18);
+
+}
+
+
+
+
+.card-header {
+
+
+    background:
+    linear-gradient(
+    135deg,
+    #2563eb,
+    #7c3aed
+    ) !important;
+
+
+    color:white !important;
+
+    font-weight:700;
+
+    border:none;
+
+}
+
+
+
+
+
+
+/* DASHBOARD STATS */
+
+
+.row .card h3 {
+
+    font-size:2.2rem;
+
+    color:#2563eb;
+
+}
+
+
+
+
+
+
+/* BUTTONS */
+
+
+.btn {
+
+    border-radius:12px !important;
+
+    font-weight:600;
+
+    padding:
+    9px 18px;
+
+
+    transition:.25s ease;
+
+}
+
+
+
+.btn:hover {
+
+    transform:
+    translateY(-3px)
+    scale(1.02);
+
+    box-shadow:
+    0 10px 20px rgba(0,0,0,.15);
+
+}
+
+
+
+
+
+.btn-primary {
+
+background:
+linear-gradient(135deg,#2563eb,#1d4ed8);
+
+border:none;
+
+}
+
+
+
+.btn-success {
+
+background:
+linear-gradient(135deg,#16a34a,#15803d);
+
+border:none;
+
+}
+
+
+
+.btn-warning {
+
+background:
+linear-gradient(135deg,#f59e0b,#d97706);
+
+border:none;
+
+}
+
+
+
+
+.btn-danger {
+
+background:
+linear-gradient(135deg,#ef4444,#b91c1c);
+
+border:none;
+
+}
+
+
+
+
+
+
+/* TABLES */
+
+
+.table {
+
+
+background:white;
+
+border-radius:18px;
+
+overflow:hidden;
+
+box-shadow:
+0 15px 30px rgba(0,0,0,.08);
+
+}
+
+
+
+.table thead {
+
+
+background:
+linear-gradient(
+135deg,
+#111827,
+#334155
+);
+
+
+color:white;
+
+}
+
+
+
+
+.table tbody tr {
+
+
+transition:.2s ease;
+
+}
+
+
+
+.table tbody tr:hover {
+
+
+background:#eff6ff;
+
+transform:
+scale(1.005);
+
+}
+
+
+
+
+
+/* INPUTS */
+
+
+input,
+select,
+textarea {
+
+
+border-radius:14px !important;
+
+border:
+1px solid #d1d5db !important;
+
+
+padding:12px !important;
+
+
+}
+
+
+
+input:focus,
+select:focus,
+textarea:focus {
+
+
+border-color:#2563eb !important;
+
+
+box-shadow:
+0 0 0 4px rgba(37,99,235,.15)
+!important;
+
+}
+
+
+
+
+
+
+/* BADGES */
+
+
+.badge {
+
+
+padding:8px 12px;
+
+border-radius:20px;
+
+}
+
+
+
+
+
+
+
+/* LISTS */
+
+
+.list-group-item {
+
+
+border:none !important;
+
+
+margin-bottom:8px;
+
+
+border-radius:14px !important;
+
+
+box-shadow:
+0 5px 15px rgba(0,0,0,.06);
+
+
+}
+
+
+
+
+
+/* FOOTER */
+
+
+footer {
+
+
+margin-top:50px;
+
+
+padding:25px;
+
+
+color:#64748b;
+
+
+font-weight:600;
+
+
+}
+
+
+
+
+
+/* HR */
+
+
+hr {
+
+border:none;
+
+height:2px;
+
+background:
+linear-gradient(
+90deg,
+transparent,
+#2563eb,
+transparent
+);
+
+}
+
+
+
+
+
+/* MOBILE */
+
+
+@media(max-width:768px){
+
+
+.navbar .btn {
+
+    margin-top:8px;
+
+}
+
+
+.card {
+
+    margin-bottom:20px;
+
+}
+
+
+.table {
+
+    font-size:.85rem;
+
+}
+
+
+}

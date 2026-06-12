@@ -18,6 +18,15 @@ router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
 
+@router.get('/')
+def home(request:Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="login.html",
+        context={"request": request}
+    )
+
+
 
 @router.get("/login")
 def login_page(request: Request):
@@ -92,6 +101,7 @@ def profile_page(
             "name": request.session.get("name"),
             "role": request.session.get("role"),
             "email":user.email,
+            "university_id":user.university_id,
             "rfid_uid":user.rfid_uid,
             "borrow_count": borrow_count,
             "visit_count": visit_count,

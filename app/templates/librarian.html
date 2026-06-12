@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<title>Welcome {{name}}</title>
+<title>Welcome {{ name }}</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
+
+
+<body>
+
+
 {% include "navbar.html" %}
+
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
@@ -17,307 +24,510 @@
 SmartLib
 </a>
 
+
 <div>
 
-<a
-class="btn btn-light me-2"
-href="/librarian"
->
+<a class="btn btn-light me-2" href="/librarian">
 Dashboard
 </a>
-<a
-href="/audit-logs"
-class="btn btn-dark"
->
+
+<a href="/audit-logs" class="btn btn-dark">
 Audit Logs
 </a>
 
-<a
-class="btn btn-warning me-2"
-href="/profile"
->
+<a class="btn btn-warning me-2" href="/profile">
 Profile
 </a>
-<a
-class="btn btn-info me-2"
-href="/books-page"
->
+
+<a class="btn btn-info me-2" href="/books-page">
 Books
 </a>
 
-<a
-class="btn btn-success me-2"
-href="/circulation"
->
+<a class="btn btn-success me-2" href="/circulation">
 Circulation
 </a>
-<a
-class="btn btn-secondary me-2"
-href="/attendance-page"
->
+
+<a class="btn btn-secondary me-2" href="/attendance-page">
 Attendance
 </a>
-<a
-class="btn btn-warning me-2"
-href="/renewals"
->
+
+<a class="btn btn-warning me-2" href="/renewals">
 Renewals
 </a>
 
-<a
-class="btn btn-danger"
-href="/api/auth/logout"
->
+<a class="btn btn-danger" href="/api/auth/logout">
 Logout
 </a>
 
-</div>
 
 </div>
-<div class="col-md-3">
-
-    <div class="card p-3">
-
-        <h5>
-            Overdue Books
-        </h5>
-
-        <h3>
-            {{ stats.overdue_books }}
-        </h3>
-
-    </div>
 
 </div>
 
 </nav>
 
-<body>
-    <div class="col-md-3">
-    <div class="card p-3">
-        <h5>Current Visitors</h5>
-        <h3>{{ stats.current_visitors }}</h3>
-    </div>
-</div>
+
 
 <div class="container mt-4">
+
 
 <h2>
 Librarian Dashboard
 </h2>
 
+
+
 <div class="row">
 
-<div class="col-md-3">
-<div class="card p-3">
-<h5>Visitors</h5>
-<h3>{{stats.current_visitors}}</h3>
-</div>
-</div>
+
 
 <div class="col-md-3">
-<div class="card p-3">
-<h5>Total Books</h5>
-<h3>{{stats.total_books}}</h3>
-</div>
-</div>
 
-<div class="col-md-3">
 <div class="card p-3">
-<h5>Active Loans</h5>
-<h3>{{stats.active_loans}}</h3>
-</div>
-</div>
-#quick action setup
-<div class="col-md-3">
-<div class="card p-3">
-<h5>Total users</h5>
-<h3>{{stats.total_users}}</h3>
-</div>
-</div>
+
+<h5>
+Visitors
+</h5>
+
+<h3>
+{{ stats.current_visitors }}
+</h3>
 
 </div>
 
 </div>
+
+
+
+<div class="col-md-3">
+
+<div class="card p-3">
+
+<h5>
+Total Books
+</h5>
+
+<h3>
+{{ stats.total_books }}
+</h3>
+
+</div>
+
+</div>
+
+
+
+<div class="col-md-3">
+
+<div class="card p-3">
+
+<h5>
+Active Loans
+</h5>
+
+<h3>
+{{ stats.active_loans }}
+</h3>
+
+</div>
+
+</div>
+
+
+
+<div class="col-md-3">
+
+<div class="card p-3">
+
+<h5>
+Total Users
+</h5>
+
+<h3>
+{{ stats.total_users }}
+</h3>
+
+</div>
+
+</div>
+
+
+
+</div>
+
+
+
+<div class="row mt-3">
+
+
+<div class="col-md-3">
+
+<div class="card p-3">
+
+<h5>
+Overdue Books
+</h5>
+
+<h3>
+{{ stats.overdue_books }}
+</h3>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
 
 <hr>
 
+
+
 <div class="card mb-4">
+
 
 <div class="card-header">
 Quick Actions
 </div>
 
+
 <div class="card-body">
+
 
 <a href="/books-page" class="btn btn-primary m-1">
 Manage Books
 </a>
 
+
 <a href="/circulation" class="btn btn-success m-1">
 Borrow / Return
 </a>
+
 
 <a href="/attendance-page" class="btn btn-info m-1">
 Attendance
 </a>
 
+
 <a href="/renewals" class="btn btn-warning m-1">
 Renewals
 </a>
+
 
 <a href="/audit-logs" class="btn btn-dark m-1">
 Audit Logs
 </a>
 
+
 <a href="/search-books" class="btn btn-secondary m-1">
 Book Search
 </a>
 
+
+<a href="/active-loans" class="btn btn-primary m-1">
+View Active Loans
+</a>
+
+
 </div>
 
 </div>
+
+
+
+
+
 <div class="card mb-4">
+
 
 <div class="card-header">
 Student Lookup
 </div>
 
+
 <div class="card-body">
 
-<form method="get" action="/student_search">
-    <input
-        name="q"
-        class="form-control mb-2"
-        placeholder="Search by name or ID"
-        value="{{ q }}"
-        required
-    >
 
-    <button class="btn btn-primary" type="submit">
-        Search Student
-    </button>
+<form method="get" action="/student_search">
+
+
+<input
+name="q"
+class="form-control mb-2"
+placeholder="Search by name or ID"
+value="{{ q }}"
+required
+>
+
+
+<button class="btn btn-primary" type="submit">
+Search Student
+</button>
+
+
 </form>
 
+
 </div>
 
 </div>
+
+
+
+
 <hr>
 
-<h4>Recent RFID Activity</h4>
+
+
+
+<h4>
+Recent RFID Activity
+</h4>
+
 
 <table class="table table-striped">
 
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Entry Time</th>
-        </tr>
-    </thead>
 
-    <tbody>
+<thead>
 
-    {% for attendance, user in stats.recent_activity %}
+<tr>
 
-        <tr>
+<th>Name</th>
 
-            <td>{{ user.name }}</td>
+<th>Entry Time</th>
 
-            <td>{{ attendance.entry_time }}</td>
+</tr>
 
-        </tr>
+</thead>
 
-    {% endfor %}
 
-    </tbody>
+
+<tbody>
+
+
+{% for attendance, user in stats.recent_activity %}
+
+
+<tr>
+
+<td>
+{{ user.name }}
+</td>
+
+
+<td>
+{{ attendance.entry_time }}
+</td>
+
+
+</tr>
+
+
+{% endfor %}
+
+
+</tbody>
+
 
 </table>
 
+
+
+
+
 <hr>
 
-<h3>Currently Inside Library</h3>
+
+
+
+<h3>
+Currently Inside Library
+</h3>
+
+
 
 <table class="table table-striped">
 
+
 <thead>
+
 <tr>
-    <th>Name</th>
-    <th>Role</th>
-    <th>Entry Time</th>
+
+<th>Name</th>
+
+<th>Role</th>
+
+<th>Entry Time</th>
+
 </tr>
+
 </thead>
 
+
+
 <tbody>
+
+
 
 {% for attendance, user in current_inside %}
 
+
+
 <tr>
 
-<td>{{ user.name }}</td>
 
-<td>{{ user.role }}</td>
+<td>
+{{ user.name }}
+</td>
 
-<td>{{ attendance.entry_time }}</td>
+
+<td>
+{{ user.role }}
+</td>
+
+
+<td>
+{{ attendance.entry_time }}
+</td>
+
 
 </tr>
 
+
+
 {% endfor %}
+
+
 
 </tbody>
 
+
 </table>
+
+
+
+
+
+
 
 <hr>
 
-<h3>Overdue Books</h3>
+
+
+
+
+<h3>
+Overdue Books
+</h3>
+
+
 
 <table class="table table-bordered">
 
+
+
 <thead>
+
 
 <tr>
 
+<th>Borrow ID</th>
+
 <th>Student</th>
+
+<th>University ID</th>
+
 <th>Book</th>
+
 <th>Due Date</th>
-<th>Days Late</th>
+
+<th>Fine</th>
 
 </tr>
+
 
 </thead>
 
+
+
+
 <tbody>
 
-{% for borrow, user, book in overdue_records %}
+
+
+
+{% for item in overdue_details %}
+
+
 
 <tr>
 
-<td>{{ user.name }}</td>
-
-<td>{{ book.title }}</td>
-
-<td>{{ borrow.due_date }}</td>
 
 <td>
-
-{{ (
-(
-now -
-borrow.due_date
-).days
-) }}
-
+{{ item.borrow_id }}
 </td>
+
+
+<td>
+{{ item.student_name }}
+</td>
+
+
+<td>
+{{ item.student_id }}
+</td>
+
+
+<td>
+{{ item.book_title }}
+</td>
+
+
+<td>
+{{ item.due_date }}
+</td>
+
+
+<td>
+{{ item.fine }} Tk
+</td>
+
 
 </tr>
 
+
+
+
 {% endfor %}
+
+
+
+
 
 </tbody>
 
+
 </table>
+
+
+
+
+
 <footer class="text-center mt-5 mb-3">
+
 SmartLib Ecosystem - RFID Smart Library System
+
 </footer>
+
+
+
+</div>
+
+
 </body>
+
+
 </html>

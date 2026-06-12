@@ -10,6 +10,7 @@ from app.models.attendance import Attendancelog
 from app.models.borrow import Borrowrecord
 from app.models.book import Book
 from app.models.renewal import RenewalRequest
+from app.services.fine_service import calculate_fine
 
 from datetime import datetime
 
@@ -40,6 +41,35 @@ def student_dashboard(request: Request):
         .order_by(Borrowrecord.id.desc())
         .all()
     )
+    borrow_details = []
+
+    for borrow, book in borrowed_books:
+
+     fine = calculate_fine(
+        borrow.due_date
+    )
+
+     days_remaining = (
+        borrow.due_date -
+        datetime.utcnow()
+    ).days
+
+     borrow_details.append({
+
+        "borrow_id": borrow.id,
+
+        "book_title": book.title,
+
+        "borrow_date": borrow.borrow_date,
+
+        "due_date": borrow.due_date,
+
+        "status": borrow.status,
+
+        "days_remaining": days_remaining,
+
+        "fine": fine
+    })
 
     # ---------------------------
     # Attendance history
@@ -127,7 +157,7 @@ def student_dashboard(request: Request):
             "request": request,
             "name": request.session.get("name"),
 
-            "borrowed_books": borrowed_books,
+            "borrow_details": borrow_details,
             "attendance_history": attendance_history,
             "renewals": renewals,
             "renewal_map": renewal_map,
@@ -167,6 +197,27 @@ def teacher_dashboard(request: Request):
     )
     .all()
 )
+    borrow_details = []
+
+    for borrow, book in borrowed_books:
+        fine = calculate_fine(borrow.due_date)
+
+        days_remaining = (
+            borrow.due_date - datetime.utcnow()
+    ).days
+
+        borrow_details.append({
+         "borrow_id": borrow.id,
+         "book_title": book.title,
+         "borrow_date": borrow.borrow_date,
+         "due_date": borrow.due_date,
+         "status": borrow.status,
+         "days_remaining": days_remaining,
+         "fine": fine,
+    })
+    
+
+
     attendance_history = (
     db.query(Attendancelog)
     .filter(
@@ -186,7 +237,7 @@ def teacher_dashboard(request: Request):
     context={
         "request": request,
         "name": request.session.get("name"),
-        "borrowed_books": borrowed_books,
+        "borrow_details": borrow_details,
         "attendance_history": attendance_history
     }
 )
@@ -249,6 +300,28 @@ def librarian_dashboard(
     stats["overdue_books"] = len(
     overdue_records
 )
+    overdue_details = []
+
+    for borrow, user, book in overdue_records:
+
+        fine = calculate_fine(
+           borrow.due_date
+    )
+
+        overdue_details.append({
+
+         "borrow_id": borrow.id,
+
+         "student_name": user.name,
+
+         "student_id": user.university_id,
+
+         "book_title": book.title,
+
+         "due_date": borrow.due_date,
+
+         "fine": fine
+    })
     
 
 
@@ -261,7 +334,8 @@ def librarian_dashboard(
         "stats": stats,
         "current_inside": current_inside,
         "overdue_records": overdue_records,
-        "now":datetime.utcnow()
+        "now":datetime.utcnow(),
+        "overdue_details": overdue_details
         
     }
 )
