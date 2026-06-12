@@ -51,11 +51,9 @@
                 placeholder="Category"
             >
 
-            <input
-                id="shelf_id"
-                class="form-control mb-2"
-                placeholder="Shelf ID"
-            >
+            <select id="shelf_id" class="form-control mb-2">
+    <option value="">Select Shelf</option>
+</select>
 
             <input
                 id="quantity"
@@ -98,7 +96,29 @@
 SmartLib Ecosystem - RFID Smart Library System
 </footer>
    <script>
+async function loadShelves() {
+    try {
+        const res = await fetch("/api/shelves");
+        const shelves = await res.json();
 
+        let html = `<option value="">Select Shelf</option>`;
+
+        shelves.forEach(shelf => {
+            html += `
+                <option value="${shelf.id}">
+                    ${shelf.shelf_code}
+                </option>
+            `;
+        });
+
+        document.getElementById("shelf_id").innerHTML = html;
+
+    } catch (err) {
+        console.error("Failed to load shelves:", err);
+    }
+}
+
+loadShelves();
 async function loadBooks() {
     try {
         const response = await fetch("/api/books");
