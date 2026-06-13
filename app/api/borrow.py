@@ -15,6 +15,7 @@ from app.schemas.renewal import (
     RenewalApprove
 )
 from app.services.audit_service import log_action
+from app.services.email_service import send_borrow_receipt
 
 router=APIRouter()
 
@@ -82,6 +83,16 @@ def borrow_book(
     db.add(record)
     db.commit()
     db.refresh(record)
+    send_borrow_receipt(
+    user.email,
+    user.name,
+    book.title,
+    record.id,
+    due_date
+)
+
+
+
     log_action(
     db,
     f"{user.name} borrowed {book.title}",
