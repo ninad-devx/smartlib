@@ -26,12 +26,19 @@ required
 >
 
 <input
-id="book_id"
-class="form-control mb-2"
-placeholder="Book ID"
-required
+id="book_search"
+class="form-control"
+placeholder="Search Book Name"
+list="book_list"
 >
 
+<datalist id="book_list"></datalist>
+
+<input
+type="hidden"
+id="book_id"
+>
+<br>
 <input
 id="borrow_days"
 type="number"
@@ -80,69 +87,95 @@ SmartLib Ecosystem - RFID Smart Library System
 
 <script>
 
+async function loadBooks() {
+
+    const response =
+        await fetch("/api/books");
+
+    const books =
+        await response.json();
+
+    const list =
+        document.getElementById("book_list");
+
+    books.forEach(book => {
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            `${book.title} (ID:${book.id})`;
+
+        list.appendChild(option);
+
+    });
+
+}
+
+loadBooks();
+
+
 document
 .getElementById("borrowForm")
-.addEventListener("submit", async (e)=>{
+.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
+    const selected =
+        document.getElementById("book_search").value;
+
+    const match =
+        selected.match(/ID:(\d+)/);
+
+    if (!match) {
+        alert("Please select a valid book from the list.");
+        return;
+    }
+
+    const book_id =
+        parseInt(match[1]);
+
     const response =
-    await fetch(
-        "/api/borrow",
-        {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
+        await fetch("/api/borrow", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             },
-            body:JSON.stringify({
+            body: JSON.stringify({
 
-    university_id:
-        document.getElementById(
-            "university_id"
-        ).value,
+                university_id:
+                    document.getElementById("university_id").value,
 
-    book_id:
-        parseInt(
-            document.getElementById(
-                "book_id"
-            ).value
-        ),
+                book_id: book_id,
 
-    borrow_days:
-        parseInt(
-            document.getElementById(
-                "borrow_days"
-            ).value
-        )
+                borrow_days:
+                    parseInt(
+                        document.getElementById("borrow_days").value
+                    )
 
-})
-        }
-    );
+            })
+        });
 
     const data =
         await response.json();
 
-    alert(
-    data.message
-);
-
+    alert(data.message);
 });
+
 
 document
 .getElementById("returnForm")
-.addEventListener("submit", async (e)=>{
+.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
     const response =
-    await fetch(
-        "/api/return",
-        {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
+        await fetch("/api/return", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             },
-            body:JSON.stringify({
+            body: JSON.stringify({
 
                 borrow_id:
                     parseInt(
@@ -150,17 +183,12 @@ document
                     )
 
             })
-        }
-    );
+        });
 
     const data =
         await response.json();
 
-    alert(
-        data.message ||
-        "Returned"
-    );
-
+    alert(data.message || "Returned");
 });
 
 </script>
