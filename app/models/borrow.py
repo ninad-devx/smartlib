@@ -15,12 +15,13 @@ class Borrowrecord(Base):
 
     due_date=Column(DateTime,nullable=True)
 
-    status=Column(DateTime,nullable=True)
+    return_date=Column(DateTime,nullable=True)
 
     status=Column(Enum(
         "borrowed",
         "returned", 
-        "overdue"
+        "overdue",
+        name="borrow_status_enum"
     ),
     default="borrowed" 
     )

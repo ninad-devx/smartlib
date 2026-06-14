@@ -111,9 +111,9 @@ def student_dashboard(request: Request):
         renewal_allowed[b.id] = False
         continue
 
-    try:
+      try:
         renewal_allowed[b.id] = b.due_date > now
-    except:
+      except Exception:
         renewal_allowed[b.id] = False
 
     # ---------------------------

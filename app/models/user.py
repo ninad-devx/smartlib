@@ -20,7 +20,8 @@ class User(Base):
     role=Column(Enum(
         "student",
         "teacher",
-        "librarian"
+        "librarian",
+        name="user_role_enum"
     ),nullable=False)
 
     department=Column(String(100))

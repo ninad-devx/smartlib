@@ -3,6 +3,7 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
+import urllib.parse
 
 load_dotenv()
 
@@ -12,9 +13,16 @@ HOST=os.getenv("HOST")
 PORT=os.getenv("PORT")
 DATABASE=os.getenv("DATABASE")
 
-DATABASE_URL=(f"mysql+pymysql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
+# 2. Safely encode the password to protect the '&' character
+SAFE_PASSWORD = urllib.parse.quote_plus(PASSWORD) if PASSWORD else ""
 
-engine=create_engine(DATABASE_URL,echo=True)
+# Updated: Removed &supavisor_session=true to keep psycopg2 happy
+DATABASE_URL = (
+    f"postgresql+psycopg2://{USER}:{SAFE_PASSWORD}@{HOST}:{PORT}/{DATABASE}"
+    "?sslmode=require"
+)
+
+engine = create_engine(DATABASE_URL, echo=True, pool_pre_ping=True)
 
 Sessionlocal=sessionmaker(autoflush=False,autocommit=False,bind=engine)
 

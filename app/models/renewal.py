@@ -28,7 +28,9 @@ class RenewalRequest(Base):
         Enum(
             "pending",
             "approved",
-            "rejected"
+            "rejected",
+            name="renewal_status_enum"
+
         ),
         default="pending"
     )
