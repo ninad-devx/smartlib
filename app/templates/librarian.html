@@ -283,9 +283,23 @@ Search Student
 
 
 
+<div class="d-flex justify-content-between align-items-center">
+
 <h4>
 Recent RFID Activity
 </h4>
+
+
+<button
+class="btn btn-danger"
+onclick="clearRFIDActivity()"
+>
+Clear RFID Activity
+</button>
+
+
+</div>
+
 
 
 <table class="table table-striped">
@@ -333,6 +347,7 @@ Recent RFID Activity
 
 
 </table>
+
 
 
 
@@ -526,7 +541,65 @@ SmartLib Ecosystem - RFID Smart Library System
 
 </div>
 
+<script>
 
+
+function clearRFIDActivity(){
+
+    if(!confirm(
+        "Clear recent RFID activity?"
+    )){
+        return;
+    }
+
+
+    fetch(
+        "/rfid/clear",
+        {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            }
+        }
+    )
+    .then(response => response.json())
+    .then(data => {
+
+
+        if(data.success){
+
+            alert(
+                "RFID activity cleared"
+            );
+
+            location.reload();
+
+        }
+        else{
+
+            alert(
+                "Failed to clear RFID activity"
+            );
+
+        }
+
+
+    })
+    .catch(error=>{
+
+        console.log(error);
+
+        alert(
+            "RFID clear error"
+        );
+
+    });
+
+
+}
+
+
+</script>
 </body>
 
 

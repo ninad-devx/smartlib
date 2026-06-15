@@ -64,6 +64,13 @@ id="attendanceTable"
 
 </table>
 
+<button
+class="btn btn-danger"
+onclick="clearAttendance()"
+>
+Clear Attendance Logs
+</button>
+
 </div>
 <footer class="text-center mt-5 mb-3">
 SmartLib Ecosystem - RFID Smart Library System
@@ -78,15 +85,18 @@ function filterTable(){
         .value
         .toLowerCase();
 
+
     const rows =
         document.querySelectorAll(
             "#attendanceTable tbody tr"
         );
 
+
     rows.forEach(row=>{
 
         const text =
             row.innerText.toLowerCase();
+
 
         row.style.display =
             text.includes(value)
@@ -96,6 +106,62 @@ function filterTable(){
     });
 
 }
+
+
+
+function clearAttendance(){
+
+    if(!confirm(
+        "Clear all attendance logs?"
+    )){
+        return;
+    }
+
+
+    fetch(
+        "/attendance/clear",
+        {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            }
+        }
+    )
+    .then(response=>response.json())
+    .then(data=>{
+
+
+        if(data.success){
+
+            alert(
+                "Attendance logs cleared"
+            );
+
+
+            location.reload();
+
+        }
+        else{
+
+            alert(
+                "Clear failed"
+            );
+
+        }
+
+    })
+    .catch(error=>{
+
+        console.log(error);
+
+        alert(
+            "Failed to clear attendance"
+        );
+
+    });
+
+}
+
 
 </script>
 

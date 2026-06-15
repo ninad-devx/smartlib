@@ -56,11 +56,47 @@ rel="stylesheet"
 </tbody>
 
 </table>
+<button
+class="btn btn-danger"
+onclick="clearLogs()"
+>
+Clear Audit Logs
+</button>
+
+
 
 </div>
 <footer class="text-center mt-5 mb-3">
 SmartLib Ecosystem - RFID Smart Library System
 </footer>
+<script>
+
+function clearLogs(){
+
+    if(!confirm("Clear all audit logs?")){
+        return;
+    }
+
+    fetch("/audit/clear", {
+        method:"POST"
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        if(data.success){
+            alert("Audit logs cleared");
+            location.reload();
+        }
+
+    })
+    .catch(error=>{
+        console.log(error);
+        alert("Failed to clear logs");
+    });
+
+}
+
+</script>
 </body>
 
 </html>

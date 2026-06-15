@@ -13,4 +13,4 @@ def calculate_fine(due_date):
 
     overdue_days = (now - due_date).days
 
-    return overdue_days * 20
+    return overdue_days * 5

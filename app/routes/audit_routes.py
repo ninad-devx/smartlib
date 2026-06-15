@@ -1,8 +1,11 @@
 from fastapi import APIRouter
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
+from app.core.database import get_db
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from app.models.attendance import Attendancelog
 
-from app.core.database import Sessionlocal
 from app.models.audit import AuditLog
 
 from app.utils.auth import (
@@ -17,7 +20,8 @@ templates = Jinja2Templates(directory="app/templates")
 
 @router.get("/audit-logs")
 def audit_logs_page(
-    request: Request
+    request: Request,
+    db: Session = Depends(get_db)
 ):
 
     require_login(request)
@@ -27,13 +31,9 @@ def audit_logs_page(
         ["librarian"]
     )
 
-    db = Sessionlocal()
-
     logs = (
         db.query(AuditLog)
-        .order_by(
-            AuditLog.id.desc()
-        )
+        .order_by(AuditLog.id.desc())
         .limit(300)
         .all()
     )
@@ -42,7 +42,36 @@ def audit_logs_page(
         request=request,
         name="audit_logs.html",
         context={
-            "request": request,
             "logs": logs
         }
     )
+
+
+@router.post("/audit/clear")
+def clear_audit_logs(
+    db:Session=Depends(get_db)
+):
+
+    db.query(
+        AuditLog
+    ).delete()
+
+    db.commit()
+
+    return {
+        "success":True
+    }
+
+@router.post("/attendance/clear")
+def clear_attendance_logs(
+    db: Session = Depends(get_db)
+):
+
+    db.query(
+        Attendancelog
+    ).delete()
+
+    db.commit()
+
+    return {"success": True}
+
