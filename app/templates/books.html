@@ -21,51 +21,27 @@
 
         <form id="bookForm">
 
-            <input
-                id="isbn"
-                class="form-control mb-2"
-                placeholder="ISBN"
-            >
+            <input id="isbn" class="form-control mb-2" placeholder="ISBN">
 
-            <input
-                id="title"
-                class="form-control mb-2"
-                placeholder="Title"
-            >
+            <input id="title" class="form-control mb-2" placeholder="Title">
 
-            <input
-                id="author"
-                class="form-control mb-2"
-                placeholder="Author"
-            >
+            <input id="author" class="form-control mb-2" placeholder="Author">
 
-            <input
-                id="publisher"
-                class="form-control mb-2"
-                placeholder="Publisher"
-            >
+            <input id="publisher" class="form-control mb-2" placeholder="Publisher">
 
-            <input
-                id="category"
-                class="form-control mb-2"
-                placeholder="Category"
-            >
+            <input id="category" class="form-control mb-2" placeholder="Category">
 
             <select id="shelf_id" class="form-control mb-2">
-    <option value="">Select Shelf</option>
-</select>
+                <option value="">Select Shelf</option>
+            </select>
 
-            <input
-                id="quantity"
-                class="form-control mb-2"
-                placeholder="Quantity"
-                type="number"
-            >
+            <input id="quantity" class="form-control mb-2" placeholder="Quantity" type="number">
 
-            <button
-                class="btn btn-success"
-                type="submit"
-            >
+            <input id="image_url" class="form-control" placeholder="Book Image URL">
+
+
+
+            <button class="btn btn-success" type="submit">
                 Add Book
             </button>
 
@@ -79,10 +55,12 @@
 
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Available</th>
-                </tr>
+    <th>Cover</th>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Author</th>
+    <th>Available</th>
+</tr>
             </thead>
 
             <tbody id="bookTable">
@@ -92,34 +70,34 @@
         </table>
 
     </div>
-<footer class="text-center mt-5 mb-3">
-SmartLib Ecosystem - RFID Smart Library System
-</footer>
-   <script>
-async function loadShelves() {
-    try {
-        const res = await fetch("/api/shelves");
-        const shelves = await res.json();
+    <footer class="text-center mt-5 mb-3">
+        SmartLib Ecosystem - RFID Smart Library System
+    </footer>
+    <script>
+        async function loadShelves() {
+            try {
+                const res = await fetch("/api/shelves");
+                const shelves = await res.json();
 
-        let html = `<option value="">Select Shelf</option>`;
+                let html = `<option value="">Select Shelf</option>`;
 
-        shelves.forEach(shelf => {
-            html += `
+                shelves.forEach(shelf => {
+                    html += `
                 <option value="${shelf.id}">
                     ${shelf.shelf_code}
                 </option>
             `;
-        });
+                });
 
-        document.getElementById("shelf_id").innerHTML = html;
+                document.getElementById("shelf_id").innerHTML = html;
 
-    } catch (err) {
-        console.error("Failed to load shelves:", err);
-    }
-}
+            } catch (err) {
+                console.error("Failed to load shelves:", err);
+            }
+        }
 
-loadShelves();
-async function loadBooks() {
+        loadShelves();
+        async function loadBooks() {
     try {
         const response = await fetch("/api/books");
 
@@ -133,10 +111,25 @@ async function loadBooks() {
         let html = "";
 
         books.forEach(book => {
+
+            const image = book.image_url
+                ? book.image_url
+                : "https://via.placeholder.com/60x90?text=Book";
+
             html += `
             <tr>
+                <td>
+                    <img
+    src="${image}"
+    width="60"
+    height="90"
+    style="object-fit:cover;border-radius:4px;"
+    onerror="this.src='https://via.placeholder.com/60x90?text=Book'"
+>
+                </td>
                 <td>${book.id}</td>
                 <td>${book.title}</td>
+                <td>${book.author || "-"}</td>
                 <td>${book.available_quantity}</td>
             </tr>
             `;
@@ -148,55 +141,55 @@ async function loadBooks() {
         console.error("Error loading books:", err);
     }
 }
-
-loadBooks();
-
-document.getElementById("bookForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const payload = {
-        isbn: document.getElementById("isbn").value,
-        title: document.getElementById("title").value,
-        author: document.getElementById("author").value,
-        publisher: document.getElementById("publisher").value,
-        category: document.getElementById("category").value,
-        shelf_id: parseInt(document.getElementById("shelf_id").value),
-        quantity: parseInt(document.getElementById("quantity").value)
-    };
-
-    try {
-        const res = await fetch("/api/books", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-        });
-
-        // 🔥 IMPORTANT: check backend response
-        if (!res.ok) {
-            const errorText = await res.text();
-            console.error("BOOK CREATE FAILED:", errorText);
-            alert("Failed to add book. Check console.");
-            return;
-        }
-
-        const data = await res.json();
-        console.log("SUCCESS:", data);
-
-        alert("Book Added Successfully");
-
         loadBooks();
 
-        document.getElementById("bookForm").reset();
+        document.getElementById("bookForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-    } catch (err) {
-        console.error("Network error:", err);
-        alert("Server not reachable");
-    }
-});
+            const payload = {
+    isbn: document.getElementById("isbn").value,
+    title: document.getElementById("title").value,
+    author: document.getElementById("author").value,
+    publisher: document.getElementById("publisher").value,
+    category: document.getElementById("category").value,
+    shelf_id: parseInt(document.getElementById("shelf_id").value),
+    quantity: parseInt(document.getElementById("quantity").value),
+    image_url: document.getElementById("image_url").value
+};
 
-</script>
+            try {
+                const res = await fetch("/api/books", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                // 🔥 IMPORTANT: check backend response
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error("BOOK CREATE FAILED:", errorText);
+                    alert("Failed to add book. Check console.");
+                    return;
+                }
+
+                const data = await res.json();
+                console.log("SUCCESS:", data);
+
+                alert("Book Added Successfully");
+
+                loadBooks();
+
+                document.getElementById("bookForm").reset();
+
+            } catch (err) {
+                console.error("Network error:", err);
+                alert("Server not reachable");
+            }
+        });
+
+    </script>
 </body>
 
 </html>

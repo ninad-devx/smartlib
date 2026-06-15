@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class ShelfCreate(BaseModel):
     shelf_code:str
@@ -14,5 +15,6 @@ class Bookcreate(BaseModel):
     category:str
     shelf_id:int
     quantity:int
+    image_url: Optional[str]=None
 
     

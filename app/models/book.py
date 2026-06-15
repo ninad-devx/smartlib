@@ -1,4 +1,4 @@
-from sqlalchemy import Column,Integer,String,ForeignKey
+from sqlalchemy import Column,Integer,String,ForeignKey,Text
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base
@@ -26,5 +26,7 @@ class Book(Base):
     available_quantity=Column(Integer,default=0)
 
     shelf = relationship("Shelf")
+
+    image_url = Column(Text, nullable=True)
 
     

@@ -56,26 +56,58 @@ async function searchBooks(){
 
     books.forEach(book => {
 
-        html += `
-        <div class="card mb-3 p-3">
+    const image = book.image_url
+        ? book.image_url
+        : "https://via.placeholder.com/100x140?text=Book";
 
-            <h5>${book.title}</h5>
+    html += `
+    <div class="card mb-3">
 
-            <p>
-                Author: ${book.author}
-            </p>
+        <div class="row g-0">
 
-            <p>
-                Shelf: ${book.shelf_code}
-            </p>
+            <div class="col-md-2 text-center p-2">
 
-            <p>
-                Available: ${book.available_quantity}
-            </p>
+                <img
+                    src="${image}"
+                    class="img-fluid rounded"
+                    style="max-height:150px;object-fit:cover;"
+                    onerror="this.src='https://via.placeholder.com/100x140?text=Book'"
+                >
+
+            </div>
+
+            <div class="col-md-10">
+
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                        ${book.title}
+                    </h5>
+
+                    <p class="mb-1">
+                        <strong>Author:</strong>
+                        ${book.author || "-"}
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Shelf:</strong>
+                        ${book.shelf_code || "-"}
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Available:</strong>
+                        ${book.available_quantity}
+                    </p>
+
+                </div>
+
+            </div>
 
         </div>
-        `;
-    });
+
+    </div>
+    `;
+});
 
     document
         .getElementById("results")

@@ -44,7 +44,8 @@ def created_book(request:Request,payload:Bookcreate,db:Session=Depends(get_db)):
         category=payload.category,
         shelf_id=payload.shelf_id,
         quantity=payload.quantity,
-        available_quantity=payload.quantity
+        available_quantity=payload.quantity,
+        image_url=payload.image_url
     )
 
     db.add(book)
@@ -96,20 +97,13 @@ def search_books(
     for book, shelf in books:
 
         result.append({
-
-            "id": book.id,
-
-            "title": book.title,
-
-            "author": book.author,
-
-            "available_quantity":
-                book.available_quantity,
-
-            "shelf_code":
-                shelf.shelf_code
-
-        })
+    "id": book.id,
+    "title": book.title,
+    "author": book.author,
+    "available_quantity": book.available_quantity,
+    "shelf_code": shelf.shelf_code,
+    "image_url": book.image_url
+})
 
     return result
     
