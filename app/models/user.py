@@ -9,7 +9,7 @@ class User(Base):
 
     id=Column(Integer,primary_key=True,index=True)
 
-    university_id=Column(String(50),unique=True,nullable=False)
+    university_id=Column(Integer,unique=True,nullable=False)
 
     name=Column(String(100),nullable=False)
 
