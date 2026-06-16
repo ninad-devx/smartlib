@@ -29,8 +29,7 @@ def student_dashboard(request: Request):
     require_role(request, ["student"])
 
     user_id = request.session["user_id"]
-    now = datetime.now(timezone.utc)
-
+    now = datetime.utcnow()
     # ---------------------------
     # Borrowed books
     # ---------------------------

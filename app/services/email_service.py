@@ -56,7 +56,7 @@ Book: {book_title}
 Due Date: {due_date}
 
 Fine Policy:
-20 Tk per overdue day.
+5 Tk per overdue day.
 
 Thank you for using SmartLib Ecosystem.
 """
