@@ -1,65 +1,42 @@
 import os
-import smtplib
-import traceback
-
+import requests
 from dotenv import load_dotenv
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 
 load_dotenv()
 
-MAIL_EMAIL = os.getenv("MAIL_EMAIL")
-MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 
-
-# ----------------------------
-# SAFE VALIDATION (IMPORTANT)
-# ----------------------------
-if not MAIL_EMAIL or not MAIL_PASSWORD:
-    raise ValueError("Missing MAIL_EMAIL or MAIL_PASSWORD in environment variables")
+if not RESEND_API_KEY:
+    raise ValueError("Missing RESEND_API_KEY")
 
 
 def send_email(receiver_email, subject, body):
-    server = None
 
     try:
-        message = MIMEMultipart()
-        message["From"] = MAIL_EMAIL
-        message["To"] = receiver_email
-        message["Subject"] = subject
 
-        message.attach(MIMEText(body, "plain", "utf-8"))
-
-        # ----------------------------
-        # SMTP SSL CONNECTION (GMAIL)
-        # ----------------------------
-        server = smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10)
-
-        server.login(MAIL_EMAIL, MAIL_PASSWORD)
-
-        server.sendmail(
-            MAIL_EMAIL,
-            receiver_email,
-            message.as_string()
+        response = requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {RESEND_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "from": "onboarding@resend.dev",
+                "to": [receiver_email],
+                "subject": subject,
+                "text": body,
+            },
         )
 
-        return True
+        print(response.text)
 
-    except Exception:
-        traceback.print_exc()
+        return response.status_code in [200, 201]
+
+    except Exception as e:
+        print("EMAIL ERROR:", e)
         return False
 
-    finally:
-        if server:
-            try:
-                server.quit()
-            except Exception:
-                pass
 
-
-# ----------------------------
-# BORROW RECEIPT EMAIL
-# ----------------------------
 def send_borrow_receipt(
     user_email,
     user_name,
@@ -84,4 +61,8 @@ Fine Policy:
 Thank you for using SmartLib Ecosystem.
 """
 
-    return send_email(user_email, subject, body)
+    return send_email(
+        user_email,
+        subject,
+        body
+    )
