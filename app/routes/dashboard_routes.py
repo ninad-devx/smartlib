@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
-from datetime import timezone
+from datetime import datetime,timezone
 
 from app.utils.auth import require_login, require_role
 from app.core.database import Sessionlocal
@@ -13,7 +13,6 @@ from app.models.book import Book
 from app.models.renewal import RenewalRequest
 from app.services.fine_service import calculate_fine
 
-from datetime import datetime
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -30,7 +29,7 @@ def student_dashboard(request: Request):
     require_role(request, ["student"])
 
     user_id = request.session["user_id"]
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     # ---------------------------
     # Borrowed books
@@ -121,12 +120,7 @@ def student_dashboard(request: Request):
     0 <= days_left <= 3
 )
 
-    print(
-        borrow.id,
-        borrow.due_date,
-        days_left,
-        renewal_allowed[borrow.id]
-    )
+      
     # ---------------------------
     # Borrowed count
     # ---------------------------
