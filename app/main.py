@@ -22,9 +22,11 @@ from app.routes.loan_routes import (
 app = FastAPI(title="Smartlib Ecosystem")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
+from os import getenv
+
 app.add_middleware(
     SessionMiddleware,
-    secret_key="SMARTLIB_SESSION_SECRET"
+    secret_key=getenv("SESSION_SECRET")
 )
 
 

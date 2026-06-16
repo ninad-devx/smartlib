@@ -1,1 +1,33 @@
+# secrets
 .env
+
+
+# python
+__pycache__/
+*.py[cod]
+
+# virtual environment
+venv/
+.venv/
+
+
+# IDE
+.vscode/
+.idea/
+
+
+# OS
+.DS_Store
+
+
+# logs
+*.log
+
+
+# testing/cache
+.pytest_cache/
+
+
+# build
+dist/
+build/
