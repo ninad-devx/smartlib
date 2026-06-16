@@ -1,51 +1,41 @@
+import os
 import smtplib
+import traceback
 
+from dotenv import load_dotenv
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from dotenv import load_dotenv
-
-import os
-
 load_dotenv()
-
 
 MAIL_EMAIL = os.getenv("MAIL_EMAIL")
 MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
 
 
-def send_email(
-    receiver_email,
-    subject,
-    body
-):
+# ----------------------------
+# SAFE VALIDATION (IMPORTANT)
+# ----------------------------
+if not MAIL_EMAIL or not MAIL_PASSWORD:
+    raise ValueError("Missing MAIL_EMAIL or MAIL_PASSWORD in environment variables")
+
+
+def send_email(receiver_email, subject, body):
+    server = None
 
     try:
-
         message = MIMEMultipart()
-
         message["From"] = MAIL_EMAIL
         message["To"] = receiver_email
         message["Subject"] = subject
 
-        message.attach(
-            MIMEText(
-                body,
-                "plain"
-            )
-        )
+        message.attach(MIMEText(body, "plain", "utf-8"))
 
-        server = smtplib.SMTP(
-            "smtp.gmail.com",
-            587
-        )
+        # ----------------------------
+        # SMTP SSL CONNECTION (GMAIL)
+        # ----------------------------
+        server = smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10)
 
-        server.starttls()
-
-        server.login(
-            MAIL_EMAIL,
-            MAIL_PASSWORD
-        )
+        server.login(MAIL_EMAIL, MAIL_PASSWORD)
 
         server.sendmail(
             MAIL_EMAIL,
@@ -53,17 +43,23 @@ def send_email(
             message.as_string()
         )
 
-        server.quit()
-
         return True
 
-    except Exception as e:
-
-        print("EMAIL ERROR:", e)
-
+    except Exception:
+        traceback.print_exc()
         return False
-    
 
+    finally:
+        if server:
+            try:
+                server.quit()
+            except Exception:
+                pass
+
+
+# ----------------------------
+# BORROW RECEIPT EMAIL
+# ----------------------------
 def send_borrow_receipt(
     user_email,
     user_name,
@@ -74,17 +70,13 @@ def send_borrow_receipt(
 
     subject = "SmartLib Borrow Receipt"
 
-    body = f"""
-Hello {user_name},
+    body = f"""Hello {user_name},
 
 Your book has been issued successfully.
 
 Borrow ID: {borrow_id}
-
 Book: {book_title}
-
-Due Date:
-{due_date}
+Due Date: {due_date}
 
 Fine Policy:
 20 Tk per overdue day.
@@ -92,10 +84,4 @@ Fine Policy:
 Thank you for using SmartLib Ecosystem.
 """
 
-    send_email(
-        user_email,
-        subject,
-        body
-    )
-
-    
+    return send_email(user_email, subject, body)

@@ -83,21 +83,29 @@ def borrow_book(
     db.add(record)
     db.commit()
     db.refresh(record)
-    send_borrow_receipt(
-    user.email,
-    user.name,
-    book.title,
-    record.id,
-    due_date
-)
 
+    try:
+       email_sent = send_borrow_receipt(
+        user.email,
+        user.name,
+        book.title,
+        record.id,
+        due_date
+      )
 
+       if not email_sent:
+         log_action(
+            db,
+            f"EMAIL FAILED for borrow {record.id} - {user.email}",
+            user.id
+        )
 
-    log_action(
-    db,
-    f"{user.name} borrowed {book.title}",
-    user.id
-)
+    except Exception as e:
+      log_action(
+        db,
+        f"EMAIL ERROR for borrow {record.id}: {str(e)}",
+        user.id
+    )
 
     return {
     "success": True,
@@ -152,9 +160,9 @@ def return_book(payload:Returnbook,db:Session=Depends(get_db)):
     
 
     return {
-        "success":True,
-        "message":f" {user.name}returned the book {book.title}"
-    }
+    "success": True,
+    "message": f"{user.name} returned the book {book.title}"
+}
 
 @router.get("/borrow/history/{user_id}")
 def borrow_history(
@@ -170,7 +178,21 @@ def borrow_history(
         .all()
     )
 
-    return records
+    result = []
+
+    for r in records:
+      book = db.get(Book, r.book_id)
+
+      result.append({
+        "borrow_id": r.id,
+        "book_title": book.title if book else None,
+        "book_image": book.image if book else None,
+        "borrow_date": r.borrow_date,
+        "due_date": r.due_date,
+        "status": r.status
+    })
+
+    return result
 
 
 @router.get("/borrow/active")
@@ -225,59 +247,54 @@ def create_renewal_request(
         "message": "Renewal Requested"
     }
 
-@router.post(
-    "/renew-approve"
-)
+@router.post("/renew-approve")
 def approve_renewal(
-    payload:
-    RenewalApprove,
-    db: Session =
-    Depends(get_db)
+    payload: RenewalApprove,
+    db: Session = Depends(get_db)
 ):
 
-    renewal = (
-        db.query(
-            RenewalRequest
-        )
-        .get(
-            payload.renewal_id
-        )
-    )
+    renewal = db.query(RenewalRequest).get(payload.renewal_id)
 
     if not renewal:
-
         return {
             "success": False,
-            "message": "request not found"
+            "message": "Renewal request not found"
         }
 
-    borrow = (
-        db.query(
-            Borrowrecord
-        )
-        .get(
-            renewal.borrow_id
-        )
-    )
+    if renewal.status != "pending":
+        return {
+            "success": False,
+            "message": f"Renewal already {renewal.status}"
+        }
 
-    borrow.due_date = (
-    borrow.due_date +
-    timedelta(
-        days=
-        renewal.requested_days
+    borrow = db.query(Borrowrecord).get(renewal.borrow_id)
+
+    if not borrow:
+        return {
+            "success": False,
+            "message": "Borrow record not found"
+        }
+
+    if borrow.status != "borrowed":
+        return {
+            "success": False,
+            "message": "Cannot renew returned book"
+        }
+
+    # ----------------------------
+    # UPDATE DUE DATE
+    # ----------------------------
+    borrow.due_date = borrow.due_date + timedelta(
+        days=renewal.requested_days
     )
-)
 
     renewal.status = "approved"
 
     db.commit()
 
     return {
-
         "success": True,
-
-        "message":
-        "renewal approved"
-
+        "message": "Renewal approved",
+        "borrow_id": borrow.id,
+        "new_due_date": borrow.due_date
     }
-

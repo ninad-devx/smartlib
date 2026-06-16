@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
+from datetime import timezone
 
 from app.utils.auth import require_login, require_role
 from app.core.database import Sessionlocal
@@ -60,6 +61,8 @@ def student_dashboard(request: Request):
 
         "book_title": book.title,
 
+        "book_image": book.image_url,
+
         "borrow_date": borrow.borrow_date,
 
         "due_date": borrow.due_date,
@@ -102,20 +105,28 @@ def student_dashboard(request: Request):
     # ---------------------------
     renewal_allowed = {}
 
-    for b, book in borrowed_books:
-      if b.status != "borrowed":
-        renewal_allowed[b.id] = False
-        continue
+    for borrow, book in borrowed_books:
 
-      if not b.due_date:
-        renewal_allowed[b.id] = False
-        continue
+      if borrow.status != "borrowed":
+         renewal_allowed[borrow.id] = False
+         continue
 
-      try:
-        renewal_allowed[b.id] = b.due_date > now
-      except Exception:
-        renewal_allowed[b.id] = False
+      if not borrow.due_date:
+         renewal_allowed[borrow.id] = False
+         continue
 
+      days_left = (borrow.due_date - now).days
+
+      renewal_allowed[borrow.id] = (
+    0 <= days_left <= 3
+)
+
+    print(
+        borrow.id,
+        borrow.due_date,
+        days_left,
+        renewal_allowed[borrow.id]
+    )
     # ---------------------------
     # Borrowed count
     # ---------------------------
@@ -202,13 +213,17 @@ def teacher_dashboard(request: Request):
     for borrow, book in borrowed_books:
         fine = calculate_fine(borrow.due_date)
 
-        days_remaining = (
-            borrow.due_date - datetime.utcnow()
-    ).days
+        days_remaining = 0
+
+        if borrow.due_date:
+          days_remaining = (
+             borrow.due_date - datetime.utcnow()
+             ).days
 
         borrow_details.append({
          "borrow_id": borrow.id,
          "book_title": book.title,
+         "book_image": book.image_url,
          "borrow_date": borrow.borrow_date,
          "due_date": borrow.due_date,
          "status": borrow.status,
