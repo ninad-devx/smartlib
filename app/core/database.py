@@ -7,18 +7,18 @@ import urllib.parse
 
 load_dotenv()
 
-USER=os.getenv("USER")
-PASSWORD=os.getenv("PASSWORD")
-HOST=os.getenv("HOST")
-PORT=os.getenv("PORT")
-DATABASE=os.getenv("DATABASE")
+DB_USER=os.getenv("DB_USER")
+DB_PASSWORD=os.getenv("DB_PASSWORD")
+DB_HOST=os.getenv("DB_HOST")
+DB_PORT=os.getenv("DB_PORT")
+DB_DATABASE=os.getenv("DB_DATABASE")
 
 # 2. Safely encode the password to protect the '&' character
-SAFE_PASSWORD = urllib.parse.quote_plus(PASSWORD) if PASSWORD else ""
+SAFE_PASSWORD = urllib.parse.quote_plus(DB_PASSWORD) if DB_PASSWORD else ""
 
 # Updated: Removed &supavisor_session=true to keep psycopg2 happy
 DATABASE_URL = (
-    f"postgresql+psycopg2://{USER}:{SAFE_PASSWORD}@{HOST}:{PORT}/{DATABASE}"
+    f"postgresql+psycopg2://{DB_USER}:{SAFE_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}"
     "?sslmode=require"
 )
 
