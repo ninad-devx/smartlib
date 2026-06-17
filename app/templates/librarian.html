@@ -13,7 +13,7 @@
 <body>
 
 
-{% include "navbar.html" %}
+
 
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -319,7 +319,7 @@ Clear RFID Activity
 
 
 <td>
-{{ attendance.entry_time.strftime('%I:%M %p') if attendance.entry_time else '-' }}
+{{ attendance.entry_time.strftime('%d %b %Y, %I:%M %p') if attendance.entry_time else '-' }}
 </td>
 
 
@@ -391,7 +391,7 @@ Currently Inside Library
 
 
 <td>
-{{ attendance.entry_time.strftime('%I:%M %p') if attendance.entry_time else '-' }}
+{{ attendance.entry_time.strftime('%d %b %Y, %I:%M %p') if attendance.entry_time else '-' }}
 </td>
 
 

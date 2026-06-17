@@ -43,20 +43,21 @@ rel="stylesheet">
 
 <td>{{ book.title }}</td>
 
-<td>{{ borrow.due_date }}</td>
-
 <td>
-
-<button
-    class="btn btn-success approve-btn"
-    data-renewal-id="{{ renewal.id }}"
->
-    Approve
-</button>
-
+    {{ borrow.due_date.strftime('%d %b %Y, %I:%M %p') if borrow.due_date else '-' }}
 </td>
+
 <td>
-{{ renewal.requested_days }}
+    <button
+        class="btn btn-success approve-btn"
+        data-renewal-id="{{ renewal.id }}"
+    >
+        Approve
+    </button>
+</td>
+
+<td>
+    {{ renewal.requested_days }} days
 </td>
 
 </tr>
