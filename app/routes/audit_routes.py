@@ -40,7 +40,7 @@ def audit_logs_page(
 
     return templates.TemplateResponse(
         request=request,
-        name="audit_logs.html",
+        name="audit_Logs.html",
         context={
             "logs": logs
         }
