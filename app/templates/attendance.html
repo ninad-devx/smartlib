@@ -53,8 +53,8 @@ id="attendanceTable"
 <td>{{ user.name }}</td>
 <td>{{ user.department }}</td>
 <td>{{ user.role }}</td>
-<td>{{ log.entry_time.strftime('%I:%M %p') if log.entry_time else '-' }}</td>
-<td>{{ log.exit_time.strftime('%I:%M %p') if log.exit_time else '-' }}</td>
+<td>{{ log.entry_time.strftime('%d %b %Y, %I:%M %p') if log.entry_time else '-' }}</td>
+<td>{{ log.exit_time.strftime('%d %b %Y, %I:%M %p') if log.exit_time else '-' }}</td>
 <td>{{ log.duration_minutes or "-" }}</td>
 </tr>
 

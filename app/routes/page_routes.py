@@ -312,6 +312,7 @@ def student_page(
             "students": students,
             "q": q,
             "borrows": borrows,
-            "attendance": attendance
+            "attendance": attendance,
+            "university_id":student.university_id
         }
     )
