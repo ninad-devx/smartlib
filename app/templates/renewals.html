@@ -73,46 +73,7 @@ rel="stylesheet">
 <footer class="text-center mt-5 mb-3">
 SmartLib Ecosystem - RFID Smart Library System
 </footer>
-<script>
-
-async function approveRenewal(renewalId){
-
-    const response = await fetch(
-        "/api/renew-approve",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                renewal_id: renewalId
-            })
-        }
-    );
-
-    const data = await response.json();
-
-    alert(data.message);
-
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    document.querySelectorAll(".approve-btn").forEach(btn => {
-
-        btn.addEventListener("click", () => {
-
-            approveRenewal(
-                btn.dataset.renewalId
-            );
-
-        });
-
-    });
-
-});
-
-</script>
+<script src="/static/js/renewal.js"></script>
 
 </body>
 </html>
