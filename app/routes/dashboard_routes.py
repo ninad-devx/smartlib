@@ -238,17 +238,54 @@ def teacher_dashboard(request: Request):
     .limit(20)
     .all()
 )
+        # ---------------------------
+    # Borrowed count
+    # ---------------------------
+    borrowed_count = sum(
+        1 for b, book in borrowed_books
+        if b.status == "borrowed"
+    )
+
+    # ---------------------------
+    # Hours in library
+    # ---------------------------
+    hours_in_library = 0
+
+    for log in attendance_history:
+        if log.entry_time and log.exit_time:
+            diff = log.exit_time - log.entry_time
+            hours_in_library += diff.total_seconds() / 3600
+
+    hours_in_library = round(hours_in_library, 2)
+
+    # ---------------------------
+    # Pending fines
+    # ---------------------------
+    pending_fines = 0
+
+    now = datetime.utcnow()
+
+    for b, book in borrowed_books:
+        if b.status == "borrowed" and b.due_date:
+            if b.due_date < now:
+                days_late = (now - b.due_date).days
+                pending_fines += days_late * 5
 
     return templates.TemplateResponse(
-    request=request,
-    name="teacher.html",
-    context={
-        "request": request,
-        "name": request.session.get("name"),
-        "borrow_details": borrow_details,
-        "attendance_history": attendance_history
-    }
-)
+        request=request,
+        name="teacher.html",
+        context={
+            "request": request,
+            "name": request.session.get("name"),
+            "borrow_details": borrow_details,
+            "attendance_history": attendance_history,
+            "borrowed_count": borrowed_count,
+            "hours_in_library": hours_in_library,
+            "pending_fines": pending_fines,
+        }
+    )
+
+    
 
 
 

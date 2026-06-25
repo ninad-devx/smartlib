@@ -1,287 +1,330 @@
 /* ==================================================
-   SmartLib ELITE UI SYSTEM (Refined SaaS Upgrade)
-   Based on your design — upgraded to premium level
+   SMARTLIB ULTRA PREMIUM DASHBOARD UI
    ================================================== */
 
 :root {
-    --primary:#2563eb;
+    --bg:#f7f4ef;
+    --text:#232323;
+    --muted:#6b7280;
+
+    --primary:#4f46e5;
     --secondary:#7c3aed;
 
-    --dark:#0f172a;
-    --light:#f8fafc;
+    --success:#10b981;
+    --warning:#f59e0b;
+    --danger:#ef4444;
 
-    --surface:rgba(255,255,255,0.72);
-    --surface-strong:rgba(255,255,255,0.88);
+    --shadow: 0 12px 30px rgba(0,0,0,.06);
+    --shadow-hover: 0 25px 60px rgba(0,0,0,.12);
 
-    --border:rgba(15,23,42,0.08);
-
-    --shadow-sm:0 6px 18px rgba(15,23,42,0.08);
-    --shadow-md:0 14px 35px rgba(15,23,42,0.12);
-    --shadow-lg:0 28px 70px rgba(15,23,42,0.18);
-
-    --radius:18px;
+    --radius: 24px;
 }
 
-/* =========================
+/* ==========================
    BASE
-========================= */
+========================== */
+
 * {
-    box-sizing:border-box;
+    box-sizing: border-box;
+    font-family: Inter, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    margin:0;
-    min-height:100vh;
-    font-family:"Inter","Segoe UI",system-ui,sans-serif;
-    color:#1f2937;
+    margin: 0;
+    min-height: 100vh;
+    color: var(--text);
 
     background:
-        radial-gradient(circle at 15% 10%, rgba(37,99,235,0.10), transparent 40%),
-        radial-gradient(circle at 85% 20%, rgba(124,58,237,0.08), transparent 45%),
-        linear-gradient(180deg,#f8fafc,#f3f6fb);
+        radial-gradient(circle at 10% 10%, rgba(79,70,229,.18), transparent 40%),
+        radial-gradient(circle at 90% 20%, rgba(124,58,237,.14), transparent 45%),
+        radial-gradient(circle at 50% 100%, rgba(16,185,129,.10), transparent 40%),
+        linear-gradient(180deg, #f9f7f3, #f3f0ea);
 }
 
-/* subtle noise + depth layer */
+/* floating glow layer */
 body::before {
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
+    content: "";
+    position: fixed;
+    inset: 0;
     background:
-        radial-gradient(circle at top, rgba(255,255,255,0.5), transparent 60%);
-    opacity:.6;
+        radial-gradient(circle at 20% 30%, rgba(79,70,229,.08), transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(124,58,237,.08), transparent 55%);
+    filter: blur(40px);
+    z-index: -1;
+    animation: floatGlow 10s ease-in-out infinite alternate;
 }
 
-/* =========================
-   NAVBAR (ELITE GLASS BAR)
-========================= */
+@keyframes floatGlow {
+    from { transform: translateY(0px); }
+    to { transform: translateY(20px); }
+}
+
+/* ==========================
+   NAVBAR
+========================== */
+
 .navbar {
-    background:rgba(15,23,42,0.92) !important;
+    background: rgba(255,255,255,.7) !important;
     backdrop-filter: blur(18px);
-    box-shadow: var(--shadow-md);
-    padding:14px 24px;
-    border-bottom:1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    box-shadow: 0 8px 25px rgba(0,0,0,.04);
+    padding: 14px 20px;
 }
 
 .navbar-brand {
-    font-size:1.6rem;
-    font-weight:800;
-    letter-spacing:0.5px;
-    color:#ffffff !important;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--text) !important;
 }
 
-.navbar a {
-    transition:.2s ease;
-}
+/* ==========================
+   HEADINGS (GRADIENT TEXT)
+========================== */
 
-.navbar .btn:hover {
-    transform:translateY(-2px);
-}
-
-/* =========================
-   CONTAINER
-========================= */
-.container {
-    animation: fadeIn .5s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity:0; transform:translateY(12px); }
-    to { opacity:1; transform:translateY(0); }
-}
-
-/* =========================
-   HEADINGS (MODERN HIERARCHY)
-========================= */
 h1,h2,h3,h4,h5 {
-    color:#0f172a;
-    font-weight:800;
-    letter-spacing:-0.3px;
+    font-weight: 800;
+
+    background: linear-gradient(135deg, #1f2937, #4f46e5);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-/* =========================
-   CARDS (ELITE FLOAT GLASS)
-========================= */
+/* ==========================
+   HERO
+========================== */
+
+.hero-banner {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    border-radius: 30px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 25px 60px rgba(79,70,229,.25);
+}
+
+.hero-banner h1 {
+    color: white !important;
+    font-size: 42px;
+    margin-bottom: 10px;
+    -webkit-text-fill-color: white;
+}
+
+/* ==========================
+   CARDS (MAIN UPGRADE)
+========================== */
+
 .card {
-    border:none !important;
-    border-radius:var(--radius) !important;
+    border-radius: 28px !important;
 
-    background:var(--surface) !important;
-    backdrop-filter: blur(16px);
+    background: rgba(255,255,255,.65) !important;
+    backdrop-filter: blur(22px);
 
-    box-shadow: var(--shadow-sm);
-    transition:.25s ease;
+    border: 1px solid rgba(255,255,255,.4) !important;
 
-    position:relative;
-    overflow:hidden;
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.05),
+        inset 0 1px 0 rgba(255,255,255,.6);
+
+    transition: all .35s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-/* soft edge glow */
+/* shine effect */
 .card::before {
-    content:"";
-    position:absolute;
-    inset:0;
-    border-radius:inherit;
-    padding:1px;
-    background:linear-gradient(
-        135deg,
-        rgba(37,99,235,0.18),
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 40%;
+    height: 200%;
+    background: linear-gradient(
+        120deg,
         transparent,
-        rgba(124,58,237,0.12)
+        rgba(255,255,255,.5),
+        transparent
     );
-    pointer-events:none;
+    transform: rotate(25deg);
+    transition: .6s;
+}
+
+.card:hover::before {
+    left: 120%;
 }
 
 .card:hover {
-    transform:translateY(-6px);
-    box-shadow:var(--shadow-lg);
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 30px 70px rgba(0,0,0,.15);
 }
 
-/* =========================
-   DASHBOARD STATS
-========================= */
-.row .card h3 {
-    font-size:2.3rem;
-    color:var(--primary);
-    letter-spacing:-1px;
+/* ==========================
+   STAT CARDS
+========================== */
+
+.stat-card {
+    background: rgba(255,255,255,.75);
+    border-radius: 28px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+    transition: .3s ease;
 }
 
-/* =========================
-   BUTTONS (ELITE MOTION UI)
-========================= */
-.btn {
-    border-radius:12px !important;
-    font-weight:600;
-    padding:10px 18px;
-    transition:.2s ease;
-    position:relative;
+.stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
 }
 
-.btn:hover {
-    transform:translateY(-3px);
-    box-shadow:0 12px 25px rgba(0,0,0,0.12);
+.stat-card span {
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: .8px;
 }
 
-/* primary */
-.btn-primary {
-    background:linear-gradient(135deg,#2563eb,#1d4ed8) !important;
-    border:none;
+.stat-card h2 {
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--primary);
+    margin-top: 10px;
 }
 
-/* success */
-.btn-success {
-    background:linear-gradient(135deg,#16a34a,#15803d) !important;
-    border:none;
-}
+/* ==========================
+   TABLES
+========================== */
 
-/* warning */
-.btn-warning {
-    background:linear-gradient(135deg,#f59e0b,#d97706) !important;
-    border:none;
-}
-
-/* danger */
-.btn-danger {
-    background:linear-gradient(135deg,#ef4444,#b91c1c) !important;
-    border:none;
-}
-
-/* =========================
-   TABLES (MODERN DATA GRID)
-========================= */
 .table {
-    background:var(--surface-strong);
-    border-radius:16px;
-    overflow:hidden;
-    box-shadow:var(--shadow-sm);
+    background: white;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
 }
 
 .table thead {
-    background:linear-gradient(135deg,#0f172a,#1e293b);
-    color:white;
+    background: #f3f4f6;
 }
 
-.table tbody tr {
-    transition:.18s ease;
+.table th,
+.table td {
+    padding: 16px !important;
+    border: none !important;
 }
 
 .table tbody tr:hover {
-    background:rgba(37,99,235,0.06);
-    transform:scale(1.002);
+    background: #f5f3ff;
 }
 
-/* =========================
-   INPUTS (CLEAN ELITE FORM)
-========================= */
+/* ==========================
+   BUTTONS (GLOW STYLE)
+========================== */
+
+.btn {
+    border-radius: 16px !important;
+    font-weight: 700;
+    padding: 11px 18px;
+    transition: .25s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+    box-shadow: 0 10px 25px rgba(79,70,229,.25);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 15px 35px rgba(79,70,229,.35);
+}
+
+/* ==========================
+   INPUTS
+========================== */
+
 input,
 select,
-textarea {
-    border-radius:12px !important;
-    border:1px solid var(--border) !important;
-    padding:11px !important;
-    transition:.2s ease;
-    background:#fff;
+textarea,
+.form-control,
+.form-select {
+    border-radius: 16px !important;
+    border: 1px solid #e5e7eb !important;
+    padding: 12px !important;
+    background: white !important;
 }
 
 input:focus,
 select:focus,
-textarea:focus {
-    border-color:var(--primary) !important;
-    box-shadow:0 0 0 4px rgba(37,99,235,0.12) !important;
+textarea:focus,
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 4px rgba(79,70,229,.15) !important;
 }
 
-/* =========================
-   BADGES (SOFT SYSTEM TAGS)
-========================= */
+/* ==========================
+   BADGES
+========================== */
+
 .badge {
-    padding:7px 12px;
-    border-radius:999px;
-    font-weight:600;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-weight: 700;
 }
 
-/* =========================
-   LISTS
-========================= */
+/* ==========================
+   LIST
+========================== */
+
 .list-group-item {
-    border:none !important;
-    margin-bottom:8px;
-    border-radius:14px !important;
-    box-shadow:0 6px 16px rgba(15,23,42,0.06);
+    border: none !important;
+    border-radius: 16px !important;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.04);
 }
 
-/* =========================
+/* ==========================
    FOOTER
-========================= */
+========================== */
+
 footer {
-    margin-top:50px;
-    padding:25px;
-    color:#64748b;
-    font-weight:500;
+    margin-top: 40px;
+    color: var(--muted);
 }
 
-/* =========================
-   HR (SOFT DIVIDER)
-========================= */
+/* ==========================
+   DIVIDER
+========================== */
+
 hr {
-    border:none;
-    height:1px;
-    background:linear-gradient(90deg,transparent,#2563eb,transparent);
-    opacity:.4;
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(79,70,229,.3), transparent);
 }
 
-/* =========================
+/* ==========================
    MOBILE
-========================= */
-@media(max-width:768px){
-    .navbar .btn {
-        margin-top:8px;
+========================== */
+
+@media (max-width: 768px) {
+
+    .hero-banner {
+        padding: 25px;
+    }
+
+    .hero-banner h1 {
+        font-size: 28px;
     }
 
     .card {
-        margin-bottom:18px;
+        margin-bottom: 16px;
     }
 
     .table {
-        font-size:.85rem;
+        font-size: .85rem;
     }
 }
