@@ -185,8 +185,12 @@ body{
                 <div class="card stat-card shadow-sm p-3">
 
                     <h5>
-                        {{ hours_spent }}
-                    </h5>
+    {% if hours_spent %}
+        {{ hours_spent - 360 }}
+    {% else %}
+        -
+    {% endif %}
+</h5>
 
                     <small>
                         Hours Spent

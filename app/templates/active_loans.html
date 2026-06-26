@@ -60,11 +60,11 @@ Active Borrowed Books
 <td>{{ item.book_title }}</td>
 
 <td>
-    {{ item.borrow_date.strftime('%d %b %Y, %I:%M %p') if item.borrow_date else '-' }}
+    {{ (item.borrow_date + timedelta(hours=6)).strftime('%d %b %Y, %I:%M %p') }}
 </td>
 
 <td>
-    {{ item.due_date.strftime('%d %b %Y, %I:%M %p') if item.due_date else '-' }}
+     {{ (item.due_date + timedelta(hours=6)).strftime('%d %b %Y, %I:%M %p') }}
 </td>
 
 <td>{{ item.fine }} Tk</td>

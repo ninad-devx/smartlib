@@ -5,7 +5,7 @@ from app.core.database import get_db
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from app.models.attendance import Attendancelog
-
+from datetime import timedelta
 from app.models.audit import AuditLog
 
 from app.utils.auth import (
@@ -42,7 +42,8 @@ def audit_logs_page(
         request=request,
         name="audit_Logs.html",
         context={
-            "logs": logs
+            "logs": logs,
+             "timedelta": timedelta
         }
     )
 

@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from fastapi import Request
+from datetime import timedelta
 
 from fastapi.templating import Jinja2Templates
 
@@ -95,6 +96,8 @@ def active_loans_page(
         context={
             "request": request,
             "loan_details":
-            loan_details
+            loan_details,
+            "timedelta": timedelta
+
         }
     )

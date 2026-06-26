@@ -47,7 +47,7 @@ rel="stylesheet"
 
 <td>{{ log.performed_by }}</td>
 
-<td>{{ log.timestamp }}</td>
+<td>{{ (log.timestamp + timedelta(hours=6)).strftime('%d %b %Y, %I:%M %p') }}</td>
 
 </tr>
 
