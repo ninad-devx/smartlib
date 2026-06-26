@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from app.models.user import User
 from app.models.attendance import Attendancelog
@@ -30,18 +31,24 @@ def process_rfid_scan(db, rfid_uid):
         .order_by(Attendancelog.id.desc())
         .first()
     )
+    now = datetime.now(ZoneInfo("Asia/Dhaka"))
 
     if latest_record:
         last_time = latest_record.exit_time or latest_record.entry_time
 
-        if last_time and (datetime.utcnow() - last_time) < timedelta(seconds=5):
-            return {
-                "header": "WAIT",
-                "line1": "Please Wait",
+        
+
+        if last_time:
+           last_time = last_time.replace(tzinfo=ZoneInfo("Asia/Dhaka"))
+
+           if (now - last_time) < timedelta(seconds=5):
+               return {
+                 "header": "WAIT",
+                 "line1": "Please Wait",
                 "line2": "",
                 "footer": "",
                 "buzzer_ms": 100
-            }
+        }
 
     # -------------------------------
     # ENTRY / EXIT logic
@@ -58,7 +65,7 @@ def process_rfid_scan(db, rfid_uid):
     if not open_session:
         attendance = Attendancelog(
             user_id=user.id,
-            entry_time=datetime.utcnow()
+            entry_time=datetime.now(ZoneInfo("Asia/Dhaka"))
         )
         db.add(attendance)
         db.commit()
@@ -71,12 +78,12 @@ def process_rfid_scan(db, rfid_uid):
             "buzzer_ms": 200
         }
 
-    duration = int(
-        (datetime.utcnow() - open_session.entry_time)
+    duration = int((datetime.now(ZoneInfo("Asia/Dhaka")) - open_session.entry_time)
+        
         .total_seconds() / 60
     )
 
-    open_session.exit_time = datetime.utcnow()
+    open_session.exit_time = datetime.now(ZoneInfo("Asia/Dhaka"))
     open_session.duration_minutes = duration
 
     db.commit()
@@ -88,3 +95,6 @@ def process_rfid_scan(db, rfid_uid):
         "footer": f"{duration} mins",
         "buzzer_ms": 400
     }
+
+
+

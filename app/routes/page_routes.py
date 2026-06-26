@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import or_
+from datetime import timedelta
 
 from app.utils.auth import require_login, require_role
 from app.core.database import Sessionlocal
@@ -205,7 +206,9 @@ def attendance_page(
         name="attendance.html",
         context={
             "request": request,
-            "records": records
+            "records": records,
+             "timedelta": timedelta
+
         }
     )
 
