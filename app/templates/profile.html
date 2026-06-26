@@ -186,9 +186,9 @@ body{
 
                     <h5>
     {% if hours_spent %}
-        {{ hours_spent - 360 }}
+        {{ hours_spent | abs }} mins
     {% else %}
-        -
+        0 mins
     {% endif %}
 </h5>
 

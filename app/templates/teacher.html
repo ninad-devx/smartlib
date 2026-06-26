@@ -72,7 +72,7 @@
     <div class="col-12 col-md-4">
         <div class="card p-3 shadow-sm">
             <h5>Hours In Library</h5>
-            <h3>{{ hours_in_library or 0 }}</h3>
+            <h3>{{ (hours_in_library * 61) | round | int }} mins</h3>
         </div>
     </div>
 

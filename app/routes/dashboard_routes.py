@@ -171,7 +171,8 @@ def student_dashboard(request: Request):
             "hours_in_library": hours_in_library,
             "pending_fines": pending_fines,
 
-            "renewal_allowed": renewal_allowed
+            "renewal_allowed": renewal_allowed,
+            "timedelta": timedelta
         }
     )
 
@@ -283,6 +284,7 @@ def teacher_dashboard(request: Request):
             "borrowed_count": borrowed_count,
             "hours_in_library": hours_in_library,
             "pending_fines": pending_fines,
+            "timedelta": timedelta
         }
     )
 

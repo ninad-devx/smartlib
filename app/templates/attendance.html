@@ -57,7 +57,7 @@ id="attendanceTable"
 <td>{{ (log.exit_time + timedelta(hours=6)).strftime('%d %b %Y, %I:%M %p') }}</td>
 <td>
     {% if log.duration_minutes %}
-        {{ log.duration_minutes - 360 }}
+        {{ log.duration_minutes - 359 }}
     {% else %}
         -
     {% endif %}

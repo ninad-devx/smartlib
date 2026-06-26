@@ -83,6 +83,11 @@ def borrow_book(
     db.add(record)
     db.commit()
     db.refresh(record)
+    log_action(
+        db,
+        f"{user.name} borrowed book {book.title}",
+        user.id
+)
 
     try:
        email_sent = send_borrow_receipt(
@@ -241,6 +246,13 @@ def create_renewal_request(
 
     db.add(request)
     db.commit()
+    user = db.get(User, borrow.user_id)
+
+    log_action(
+        db,
+        f"{user.name} requested renewal for borrow #{borrow.id}",
+        user.id
+    )
 
     return {
         "success": True,
@@ -291,6 +303,13 @@ def approve_renewal(
     renewal.status = "approved"
 
     db.commit()
+    user = db.get(User, borrow.user_id)
+
+    log_action(
+        db,
+        f"{user.name}'s renewal approved for borrow #{borrow.id}",
+        user.id
+    )
 
     return {
         "success": True,
