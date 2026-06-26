@@ -260,7 +260,7 @@ Clear RFID Activity
 
 
 <td>
-{{ attendance.entry_time.strftime('%d %b %Y, %I:%M %p') if attendance.entry_time else '-' }}
+{{ (attendance.entry_time + timedelta(hours=6)).strftime('%d %b %Y, %I:%M %p') }}
 </td>
 
 
@@ -332,7 +332,7 @@ Currently Inside Library
 
 
 <td>
-{{ attendance.entry_time.strftime('%d %b %Y, %I:%M %p') if attendance.entry_time else '-' }}
+{{ (attendance.entry_time + timedelta(hours=6)).strftime('%d %b %Y, %I:%M %p') }}
 </td>
 
 

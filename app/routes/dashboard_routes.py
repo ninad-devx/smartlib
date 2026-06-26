@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
-from datetime import datetime,timezone
+from datetime import datetime
+from datetime import timedelta
 
 from app.utils.auth import require_login, require_role
 from app.core.database import Sessionlocal
@@ -380,7 +381,9 @@ def librarian_dashboard(
         "current_inside": current_inside,
         "overdue_records": overdue_records,
         "now":datetime.utcnow(),
-        "overdue_details": overdue_details
+        "overdue_details": overdue_details,
+        "timedelta": timedelta
+
         
     }
 )

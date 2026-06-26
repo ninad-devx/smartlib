@@ -78,10 +78,12 @@ def process_rfid_scan(db, rfid_uid):
             "buzzer_ms": 200
         }
 
-    duration = int((datetime.now(ZoneInfo("Asia/Dhaka")) - open_session.entry_time)
-        
-        .total_seconds() / 60
-    )
+    duration = int(
+    (
+        datetime.now(ZoneInfo("Asia/Dhaka"))
+        - open_session.entry_time.replace(tzinfo=ZoneInfo("Asia/Dhaka"))
+    ).total_seconds() / 60
+)
 
     open_session.exit_time = datetime.now(ZoneInfo("Asia/Dhaka"))
     open_session.duration_minutes = duration
