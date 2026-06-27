@@ -40,7 +40,8 @@ def gateway(
         # --------------------------------
         # RFID REGISTRATION MODE
         # --------------------------------
-        if rfid_state.pending_user_id:
+        print("Pending user:", rfid_state.pending_user_id)
+        if rfid_state.pending_user_id is not None:
 
             user = db.get(
                 User,
@@ -64,6 +65,7 @@ def gateway(
         # --------------------------------
         # NORMAL RFID ATTENDANCE MODE
         # --------------------------------
+        print("Attendance mode")
         return process_rfid_scan(
             db,
             payload.rfid_uid

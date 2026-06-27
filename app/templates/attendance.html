@@ -54,7 +54,7 @@ id="attendanceTable"
 <td>{{ user.department }}</td>
 <td>{{ user.role }}</td>
 <td>{{ (log.entry_time + timedelta(hours=6)).strftime('%d %b %Y, %I:%M %p') }}</td>
-<td>{{ (log.exit_time + timedelta(hours=6)).strftime('%d %b %Y, %I:%M %p') }}</td>
+<td>{{ (log.exit_time + timedelta(hours=6)).strftime('%d %b %Y, %I:%M %p') if log.exit_time else '-' }}</td>
 <td>
     {% if log.duration_minutes %}
         {{ log.duration_minutes - 359 }}
